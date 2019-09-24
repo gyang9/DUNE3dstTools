@@ -103,6 +103,8 @@
   TH2D* exx3 = new TH2D("","",50,-1,1,50,-120,120);
   TH2D* exx4 = new TH2D("","",50,-1,1,50,0,3000);
 
+  TH2D* muon1 = new TH2D("","",50,0,10000,50,-1,1);
+
   TChain t("tree");
   t.Add("/pnfs/dune/persistent/users/gyang/3DST/dump/standardGeo10/PROD101/FHC_*.root");
   t.SetBranchAddress("vtx",&vtx);
@@ -135,6 +137,8 @@
       mom = lepKE; //sqrt(p3lep[0]*p3lep[0] + p3lep[1]*p3lep[1] + p3lep[2]*p3lep[2]);
       hhh1->Fill(mom, ang);
       hhhh1->Fill(vtx[2], ang);
+
+      muon1->Fill(sqrt(p3lep[0]*p3lep[0] + p3lep[1]*p3lep[1] + p3lep[2]*p3lep[2]),ang);
 
       if(hadCollar_side[0] < 20 && hadCollar_side[1] < 20 && hadCollar_side[2] < 20 ){
 	h2->Fill(vtx[0],vtx[2]);
@@ -291,7 +295,11 @@
     }
   }
 
-
+  new TCanvas();
+  muon1->GetXaxis()->SetTitle("muon momentum (MeV)");
+  muon1->GetYaxis()->SetTitle("cos#theta");
+  muon1->Draw("colz");
+/*
   TCanvas* c1 = new TCanvas();
   c1->Divide(2,2);
   c1->cd(1);
@@ -477,6 +485,6 @@
   exx3->Draw("colz");
   c16->cd(4);
   exx4->Draw("colz");
-
+*/
 }
 
