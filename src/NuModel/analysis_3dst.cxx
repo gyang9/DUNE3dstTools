@@ -224,7 +224,7 @@ void MCMC::MCMC_master(){
     _currList.clear();
   }
   for(int j = 0; j < 10; j ++)
-    cout<<saveList[j]<<endl;
+  cout<<saveList[j]<<endl;
   cout<<saveRes<<endl;
 
   finI = saveList[0];
