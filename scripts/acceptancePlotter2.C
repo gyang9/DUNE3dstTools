@@ -103,6 +103,10 @@
   TH2D* exx3 = new TH2D("","",50,-1,1,50,-120,120);
   TH2D* exx4 = new TH2D("","",50,-1,1,50,0,3000);
 
+  TH2D* muon1 = new TH2D("","",50,0,10000,50,-1,1);
+  TH1D* muon2 = new TH1D("","",100,0,10000);
+  TH1D* muon3 = new TH1D("","",100,0,10000);
+
   TChain t("tree");
   t.Add("/home/guang/work/DUNE3dstTools/data/PROD101/FHC_*.root");
   t.SetBranchAddress("vtx",&vtx);
@@ -135,6 +139,12 @@
       mom = lepKE; //sqrt(p3lep[0]*p3lep[0] + p3lep[1]*p3lep[1] + p3lep[2]*p3lep[2]);
       hhh1->Fill(mom, ang);
       hhhh1->Fill(vtx[2], ang);
+
+      //muon1->Fill(sqrt(p3lep[0]*p3lep[0] + p3lep[1]*p3lep[1] + p3lep[2]*p3lep[2]),ang);
+      muon1->Fill(mom, ang);
+      muon2->Fill(sqrt(p3lep[0]*p3lep[0] + p3lep[1]*p3lep[1] + p3lep[2]*p3lep[2]));
+      if(sqrt(muExitMom[0]*muExitMom[0]+muExitMom[1]*muExitMom[1]+muExitMom[2]*muExitMom[2])>0)
+      muon3->Fill(sqrt(muExitMom[0]*muExitMom[0]+muExitMom[1]*muExitMom[1]+muExitMom[2]*muExitMom[2]));
 
       if(hadCollar_side[0] < 20 && hadCollar_side[1] < 20 && hadCollar_side[2] < 20 ){
 	h2->Fill(vtx[0],vtx[2]);
@@ -291,7 +301,35 @@
     }
   }
 
+  new TCanvas();
+  muon1->GetXaxis()->SetTitle("muon KE (MeV)");
+  muon1->GetYaxis()->SetTitle("cos#theta");
+  muon1->Draw("colz");
 
+
+  std::cout<<muon2->GetMean()<<" "<<muon3->GetMean()<<std::endl;
+  new TCanvas();
+  muon2->SetLineColor(2);
+  muon2->Draw("hist");
+  muon2->GetXaxis()->SetTitle("muon momentum (MeV)");
+  muon2->GetYaxis()->SetTitle("Events");  
+  muon3->SetLineColor(4);
+  muon3->Draw("same");
+  TLegend* leg = new TLegend(0.6,0.68,0.9,0.9,NULL,"brNDC");
+  leg->AddEntry(muon2 ,"inital muon momentum","l");
+  leg->AddEntry(muon3 ,"exiting muon momentum","l");
+  leg->SetBorderSize(2);
+  leg->SetTextFont(62);
+  leg->SetFillColor(1);
+  leg->SetLineColor(1);
+  leg->SetShadowColor(0);
+  leg->SetLineStyle(1);
+  leg->SetLineWidth(2);
+  leg->SetFillColor(0);
+  leg->SetFillStyle(1001);
+  leg->Draw();
+
+/*
   TCanvas* c1 = new TCanvas();
   c1->Divide(2,2);
   c1->cd(1);
@@ -477,6 +515,6 @@
   exx3->Draw("colz");
   c16->cd(4);
   exx4->Draw("colz");
-
+*/
 }
 
