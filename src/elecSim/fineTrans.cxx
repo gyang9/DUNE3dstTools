@@ -73,30 +73,32 @@ double trjId[200]={};
 double trjParentId[200]={};
 double trjMom[200][3]={};
 
-TFile* outFile = TFile::Open(Form("/dune/app/users/gyang/elecSim/full3DST.neutrino.eleSim.CCRES.file%d.patch%d.root", inputF, ident),"RECREATE");
+//TFile* outFile = TFile::Open(Form("/dune/app/users/gyang/elecSim/full3DST.neutrino.eleSim.CCRES.file%d.patch%d.root", inputF, ident),"RECREATE");
+TFile* outFile = TFile::Open("elecSim_output.root","RECREATE");
 TTree* c = new TTree("EDepSimTree","EDepSimTree");
 c->Branch("event",&eventN,"event/I");
-c->Branch("hitLocation",&hitLocation,"hitLocation[3000][3]/D");
-c->Branch("hitPE_mean",&hitPE,"hitPE_mean[3000][3]/D");
-c->Branch("hitPE_measure",&hitPE_m,"hitPE_measure[3000][3]/I");
-c->Branch("hitT",&hitT,"hitT[3000][3]/D");
-c->Branch("hitADC",&adc,"hitADC[3000][3]/D");
-c->Branch("hitQ",&Q,"hitQ[3000][3]/D");
-c->Branch("hitPrim",&prim,"hitPrim[3000]/I");
-c->Branch("hitPDG",&PDG,"hitPDG[3000]/I");
-c->Branch("hitE",&ener,"hitE[3000]/D");
+c->Branch("nhits", &NHits, "nhits/I");
+c->Branch("hitLocation",&hitLocation,"hitLocation[nhits][3]/D");
+c->Branch("hitPE_mean",&hitPE,"hitPE_mean[nhits][3]/D");
+c->Branch("hitPE_measure",&hitPE_m,"hitPE_measure[nhits][3]/I");
+c->Branch("hitT",&hitT,"hitT[nhits][3]/D");
+c->Branch("hitADC",&adc,"hitADC[nhits][3]/D");
+c->Branch("hitQ",&Q,"hitQ[nhits][3]/D");
+c->Branch("hitPrim",&prim,"hitPrim[nhits]/I");
+c->Branch("hitPDG",&PDG,"hitPDG[nhits]/I");
+c->Branch("hitE",&ener,"hitE[nhits]/D");
 c->Branch("trueCos",&trueCos,"trueCos[100]/D");
 c->Branch("true4Mom",&true4Mom,"true4Mom[100][4]/D");
-c->Branch("if3DST",&if3DST,"if3DST[3000]/I");
-c->Branch("startPoint",&startPoint,"startPoint[30][3]/D");
-c->Branch("contrib",&contrib,"contrib[3000]/D");
-c->Branch("trjStart",&trjStart,"trjStart[200][3]/D");
-c->Branch("trjPDG",&trjPDG,"trjPDG[200]/D");
-c->Branch("trjId",&trjId,"trjId[200]/D");
-c->Branch("trjParentId",&trjParentId,"trjParentId[200]/D");
-c->Branch("trjMom",&trjMom,"trjMom[200][3]/D");
+c->Branch("if3DST",&if3DST,"if3DST[nhits]/I");
+//c->Branch("startPoint",&startPoint,"startPoint[30][3]/D");
+//c->Branch("trackId",&contrib,"contrib[nhits]/D");
+//c->Branch("trjStart",&trjStart,"trjStart[200][3]/D");
+//c->Branch("trjPDG",&trjPDG,"trjPDG[200]/D");
+//c->Branch("trjId",&trjId,"trjId[200]/D");
+//c->Branch("trjParentId",&trjParentId,"trjParentId[200]/D");
+//c->Branch("trjMom",&trjMom,"trjMom[200][3]/D");
 
-c->Branch("ifTPC",&ifTPC,"ifTPC[3000]/I");
+c->Branch("ifTPC",&ifTPC,"ifTPC[nhits]/I");
 c->Branch("vtxPoint",&vtxPoint,"vtxPoint[4]/D");
 c->Branch("Mode",&Mode,"Mode/I");
 c->Branch("Enu",&Enu,"Enu/D");
@@ -106,7 +108,8 @@ c->Branch("nuPDG",& nupdg,"nuPDG/I");
 //c->Branch("hitLowQ",&loQ,"hitLowQ[3]/D");
 //c->Branch("hitLowADC",&loadc,"hitLowADC[3]/D");
 
-TFile g(Form("/pnfs/dune/persistent/users/gyang/3DST/edep/fullGeo/standardGeo10/PROD_CCRES/full3DST.neutrino.%d.edepsim.root",inputF));
+//TFile g(Form("/pnfs/dune/persistent/users/gyang/3DST/edep/fullGeo/standardGeo10/PROD_CCRES/full3DST.neutrino.%d.edepsim.root",inputF));
+TFile g("/home/guang/work/DUNE3dstTools/build/full3DST.antineutrino.99.edepsim.root");
 TTree* events = (TTree*) g.Get("EDepSimEvents");
 
 TG4Event* event=NULL;
@@ -130,7 +133,8 @@ TRandom3* random1 = new TRandom3();
 TRandom3* random2 = new TRandom3();
 random2->SetSeed(6666);
 
-TFile f1b(Form("/pnfs/dune/persistent/users/gyang/3DST/genie/fullGeo/standardGeo10/PROD_CCRES/full3DST.neutrino.%d.rootracker.root",inputF));
+//TFile f1b(Form("/pnfs/dune/persistent/users/gyang/3DST/genie/fullGeo/standardGeo10/PROD_CCRES/full3DST.neutrino.%d.rootracker.root",inputF));
+TFile f1b(Form("/home/guang/work/DUNE3dstTools/build/full3DST.antineutrino.99.rootracker.root"));
 TTree* h1b = (TTree*) f1b.Get("gRooTracker");
 
 h1b->SetBranchAddress("StdHepPdg", &StdHepPdgb);
@@ -185,6 +189,7 @@ for(Int_t ib=nevent*ident; ib<nevent*(ident+1) ; ib++) {
   else if(cPi==0 && zPi>0) interactionMode[ib] = 3;
   else if(cPi>0 && zPi>0) interactionMode[ib] = 4;  
 }
+
 /////////////////////////////////////////////////////////////////////////////////////
 
 for(Int_t ii=nevent*ident;ii<nevent*(ident+1);ii++){
@@ -199,7 +204,7 @@ for(Int_t ii=nevent*ident;ii<nevent*(ident+1);ii++){
   nupdg = nuPDG[ii];
   vtxPoint[0] = vtxin[ii][0];
   vtxPoint[1] = vtxin[ii][1];
-  vtxPoint[2] = vtxin[ii][2]-5;
+  vtxPoint[2] = vtxin[ii][2]-4.5;
   vtxPoint[3] = vtxin[ii][3];
   //std::cout<<"re-check neutrino energy "<<Enu<<" and vertex "<<vtxin[ii][0]<<" "<<vtxPoint[0]<<std::endl;
 
@@ -286,7 +291,7 @@ for(auto sd : event->SegmentDetectors)
 	// point resolution for T2K TPC 0.7 um : https://arxiv.org/pdf/1012.0865.pdf
         double xlocation = random2->Gaus((sd.second[i].Stop.X()+sd.second[i].Start.X())/2.,0.7);
         double ylocation = random2->Gaus((sd.second[i].Stop.Y()+sd.second[i].Start.Y())/2.,0.7);
-        double zlocation = random2->Gaus((sd.second[i].Stop.Z()+sd.second[i].Start.Z())/2.-5000. ,0.7);
+        double zlocation = random2->Gaus((sd.second[i].Stop.Z()+sd.second[i].Start.Z())/2.-4500. ,0.7);
 
         prim[NHits] = sd.second[i].PrimaryId;
         PDG[NHits] = event->Primaries[0].Particles[prim[NHits]].PDGCode;
@@ -329,7 +334,7 @@ for(auto sd : event->SegmentDetectors)
 
         double xlocation = aveX*10. + 5 + 0.;
         double ylocation = aveY*10. + 5 + 0.;
-        double zlocation = aveZ*10. + 5 + 500. - 5500;
+        double zlocation = aveZ*10. + 5 - 4500.;
 
         prim[NHits] = sd.second[i].PrimaryId;
 	contrib[NHits] = sd.second[i].Contrib[0];       
@@ -370,7 +375,7 @@ for(auto sd : event->SegmentDetectors)
 	if(primTemp < 30){
           startPoint[primTemp][0]= event->Trajectories[prim[NHits]].Points[0].Position.X()  ;
           startPoint[primTemp][1]= event->Trajectories[prim[NHits]].Points[0].Position.Y()  ;
-          startPoint[primTemp][2]= event->Trajectories[prim[NHits]].Points[0].Position.Z() - 5000 ;
+          startPoint[primTemp][2]= event->Trajectories[prim[NHits]].Points[0].Position.Z() - 4500 ;
 
 	  true4Mom[primTemp][0] = event->Primaries[0].Particles[prim[NHits]].Momentum.Px();
 	  true4Mom[primTemp][1] = event->Primaries[0].Particles[prim[NHits]].Momentum.Py();
@@ -419,9 +424,13 @@ for(auto sd : event->SegmentDetectors)
   	double peXZ = NphotXZ * MPPCEff_SuperFGD;
   	double peYZ = NphotYZ * MPPCEff_SuperFGD;
 
-  	hitT[NHits][0]=TimeDelayXY;
-  	hitT[NHits][1]=TimeDelayXZ;
-  	hitT[NHits][2]=TimeDelayYZ;
+	random1->SetSeed(NHits*30);
+  	hitT[NHits][0]=TimeDelayXY + (double)random1->Gaus(0,0.5);
+	random1->SetSeed(NHits*31);
+  	hitT[NHits][1]=TimeDelayXZ + (double)random1->Gaus(0,0.5);
+	random1->SetSeed(NHits*32);
+  	hitT[NHits][2]=TimeDelayYZ + (double)random1->Gaus(0,0.5);
+
   	hitPE[NHits][0]=peXY;
   	hitPE[NHits][1]=peXZ;
   	hitPE[NHits][2]=peYZ;
