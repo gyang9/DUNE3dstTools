@@ -13,13 +13,13 @@
 #include <TEveLine.h>
 
 #include <sstream>
-
+#include <fstream>
 
 Cube::TReconClusterElement::~TReconClusterElement() {}
 
 Cube::TReconClusterElement::TReconClusterElement(Cube::ReconCluster& cluster)
 {
-   
+
     double minEnergy = 10.0;
     double maxEnergy = 200.0;
 
@@ -41,8 +41,21 @@ Cube::TReconClusterElement::TReconClusterElement(Cube::ReconCluster& cluster)
                   << "  Charge "
                   << unit::AsString(cluster.GetEDeposit(),"pe")
                   << std::endl;
-        
+/*
+        outstream<<"77778888"
+                 <<" "<<pos.X()
+                 <<" "<<pos.Y()
+                 <<" "<<pos.Z()
+		 <<" "<<pos.T()
+                 <<" "<<cluster.GetEDeposit() <<std::endl;
+*/
+    fInfoList.push_back(pos.X());	
+    fInfoList.push_back(pos.Y());
+    fInfoList.push_back(pos.Z());
+    fInfoList.push_back(pos.T());
+    fInfoList.push_back(cluster.GetEDeposit());
 }
+
 
 double Cube::TReconClusterElement::GetLength(Cube::ReconCluster& cluster) const {
     double length = 0.0;

@@ -18,6 +18,10 @@ public:
 
     bool Valid() {return fValid;}
 
+    std::vector<double> getInfoList() {return fInfoList;}
+    std::vector<double> fInfoList;
+
+
 private:
     // Count up the track length from the nodes.
     double GetLength(Cube::ReconTrack& track) const;

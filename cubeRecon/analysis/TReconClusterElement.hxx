@@ -16,7 +16,9 @@ public:
     TReconClusterElement(Cube::ReconCluster& track);
     virtual ~TReconClusterElement();
 
+    std::vector<double> getInfoList() {return fInfoList;}
     bool Valid() {return fValid;}
+    std::vector<double> fInfoList;
 
 private:
     // Count up the track length from the nodes.

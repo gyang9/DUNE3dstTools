@@ -28,7 +28,7 @@ else(ROOT_Eve_LIBRARY)
 endif(ROOT_Eve_LIBRARY)
 
 if (EDEPSIM_LIBRARY)
-  set(show_edepsim_source TG4HitChangeHandler.cxx TTrajectoryChangeHandler.cxx)
+	set(show_edepsim_source TG4HitChangeHandler.cxx TTrajectoryChangeHandler.cxx)
   set(show_edepsim_includesTTrajectoryChangeHandler.hxx)
 endif (EDEPSIM_LIBRARY)
 
@@ -46,6 +46,8 @@ set(includes
   TReconTrackElement.hxx 
   TReconShowerElement.hxx
   TReconClusterElement.hxx
+  TTrajectoryHandler.hxx
+  TG4HitHandler.hxx
   ${show_edepsim_includes}
   )
 
@@ -54,7 +56,8 @@ set(includes
 include_directories(${CMAKE_CURRENT_LIST_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/../io
-  ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+  ${CMAKE_CURRENT_SOURCE_DIR}/../src
+  ${CMAKE_CURRENT_SOURCE_DIR}/../tools)
 
 # Build the dictionary for the i/o classes.
 ROOT_GENERATE_DICTIONARY(G__cubeanalysis
@@ -66,7 +69,7 @@ add_library(cubeanalysis SHARED
   ${source}
   G__cubeanalysis.cxx)
 target_include_directories(cubeanalysis PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(cubeanalysis PUBLIC cuberecon_io ${ROOT_LIBRARIES})
+target_link_libraries(cubeanalysis PUBLIC cuberecon_io cuberecon_tools ${ROOT_LIBRARIES})
 install(TARGETS cubeanalysis LIBRARY DESTINATION lib)
 
 # Build the analysislay

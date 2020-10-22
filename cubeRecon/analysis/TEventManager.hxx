@@ -14,6 +14,8 @@ namespace Cube {
     extern Cube::AlgorithmResult *gAlgorithm;
 
     extern int gCubeReconEntryNumber;
+
+    extern int eventCounter;
 }
 #endif
 

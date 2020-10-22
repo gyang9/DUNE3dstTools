@@ -19,9 +19,6 @@ Cube::TReconTrackElement::~TReconTrackElement() {}
 
 Cube::TReconTrackElement::TReconTrackElement(Cube::ReconTrack& track)
 {
-    std::ofstream outstream;
-    outstream.open ("testResult.txt", std::ofstream::out | std::ofstream::app);
-
     std::cout<<"doing TReconTrackElement . "<<std::endl;	
     Cube::Handle<Cube::TrackState> frontState = track.GetState();
     if (!frontState) {
@@ -81,16 +78,24 @@ Cube::TReconTrackElement::TReconTrackElement(Cube::ReconTrack& track)
               << "   Algorithm: " << track.GetAlgorithmName()
               << " w/ goodness: " << track.GetQuality()
               << " / " << track.GetNDOF();
- 
+/* 
  	outstream<<track.GetNodes().size()<<" "<<track.GetHitSelection()->size()
 	         <<" "<<length
 	         <<" "<<dEdX
 		 <<" "<<pos.X()
 		 <<" "<<pos.Y()
 		 <<" "<<pos.Z()
+		 <<" "<<pos.T()
 		 <<" "<<dir.X()
 		 <<" "<<dir.Y()
 		 <<" "<<dir.Z() <<std::endl;
+*/
+    fInfoList.push_back(pos.X());
+    fInfoList.push_back(pos.Y());
+    fInfoList.push_back(pos.Z());
+    fInfoList.push_back(pos.T());
+    fInfoList.push_back(dEdX);
+    fInfoList.push_back(length);
 }
 
 double Cube::TReconTrackElement::GetLength(Cube::ReconTrack& track) const {
