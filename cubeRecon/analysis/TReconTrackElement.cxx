@@ -94,6 +94,9 @@ Cube::TReconTrackElement::TReconTrackElement(Cube::ReconTrack& track)
     fInfoList.push_back(pos.Y());
     fInfoList.push_back(pos.Z());
     fInfoList.push_back(pos.T());
+    fInfoList.push_back(dir.X());
+    fInfoList.push_back(dir.Y());
+    fInfoList.push_back(dir.Z());    
     fInfoList.push_back(dEdX);
     fInfoList.push_back(length);
 }

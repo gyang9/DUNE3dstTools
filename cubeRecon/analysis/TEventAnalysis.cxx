@@ -43,7 +43,7 @@ void Cube::TEventAnalysis::Run(TFile* eventSource){
     Cube::gCubeReconTree->SetBranchAddress("Event",&Cube::gEvent);
     Cube::gCubeReconEntryNumber = 0;
 
-    this->setupTree("test2");
+    this->setupTree("test3");
 
     std::cout<<"total number of events : "<<gCubeReconTree->GetEntries()<<std::endl;
     for (Int_t i = 0; i< gCubeReconTree->GetEntries(); i++){
@@ -177,6 +177,7 @@ std::vector<Cube::TEventAnalysis::infoList> Cube::TEventAnalysis::ShowReconObjec
 	Cube::Handle<Cube::ReconCluster> cluster = (*obj);
 	Cube::TEventAnalysis::infoList clusterlist;
 	clusterlist = ShowReconCluster(cluster, index);
+	allList.push_back(clusterlist);
 	//std::cout<<":::::::::::::: index for the cluster : "<<index<<" "<<clusterlist.x<<std::endl;
 	//allResultList.assign(1, clusterResultList);
 
@@ -242,7 +243,11 @@ Cube::TEventAnalysis::infoList Cube::TEventAnalysis::ShowReconTrack(
     tracklist.y = trackRecoList[1];
     tracklist.z = trackRecoList[2];
     tracklist.t = trackRecoList[3];
-    tracklist.e = trackRecoList[4];
+    tracklist.px = trackRecoList[4];
+    tracklist.py = trackRecoList[5];
+    tracklist.pz = trackRecoList[6];
+    tracklist.e = trackRecoList[7];
+    tracklist.l = trackRecoList[8];
 
     return tracklist;	
 }
