@@ -102,25 +102,25 @@ private:
 
     Cube::TEventAnalysis::infoList ShowReconTrack(const Cube::Handle<Cube::ReconTrack> obj, int index=0 ) ;
 
-    double reco_x;
-    double reco_y;
-    double reco_z;
-    double reco_t;
-    double reco_px;
-    double reco_py;
-    double reco_pz;
-    double reco_e;
-    double reco_l;
-    double true_x;
-    double true_y;
-    double true_z;
-    double true_t;
-    double true_px;
-    double true_py;
-    double true_pz;
-    double true_e;
-    double true_l;
-    int true_pdg;
+    double reco_x[1000];
+    double reco_y[1000];
+    double reco_z[1000];
+    double reco_t[1000];
+    double reco_px[1000];
+    double reco_py[1000];
+    double reco_pz[1000];
+    double reco_e[1000];
+    double reco_l[1000];
+    double true_x[1000];
+    double true_y[1000];
+    double true_z[1000];
+    double true_t[1000];
+    double true_px[1000];
+    double true_py[1000];
+    double true_pz[1000];
+    double true_e[1000];
+    double true_l[1000];
+    int true_pdg[1000];
     
     int event_number;
     TFile* hfile;
@@ -130,31 +130,31 @@ private:
       hfile = TFile::Open(Form("%s.root",filename.c_str()) ,"RECREATE");
       htree = new TTree("tree","tree");
       htree->Branch("event_number",&event_number,"event_number/I");
-      htree->Branch("reco_x",&reco_x,"reco_x/D");
-      htree->Branch("reco_y",&reco_y,"reco_y/D");
-      htree->Branch("reco_z",&reco_z,"reco_z/D");
-      htree->Branch("reco_t",&reco_t,"reco_t/D");
-      htree->Branch("reco_px",&reco_px,"reco_px/D");
-      htree->Branch("reco_py",&reco_py,"reco_py/D");
-      htree->Branch("reco_pz",&reco_pz,"reco_pz/D");
-      htree->Branch("reco_energy",&reco_e,"reco_energy/D");
-      htree->Branch("reco_length",&reco_l,"reco_length/D");
+      htree->Branch("reco_x",&reco_x,"reco_x[1000]/D");
+      htree->Branch("reco_y",&reco_y,"reco_y[1000]/D");
+      htree->Branch("reco_z",&reco_z,"reco_z[1000]/D");
+      htree->Branch("reco_t",&reco_t,"reco_t[1000]/D");
+      htree->Branch("reco_px",&reco_px,"reco_px[1000]/D");
+      htree->Branch("reco_py",&reco_py,"reco_py[1000]/D");
+      htree->Branch("reco_pz",&reco_pz,"reco_pz[1000]/D");
+      htree->Branch("reco_energy",&reco_e,"reco_energy[1000]/D");
+      htree->Branch("reco_length",&reco_l,"reco_length[1000]/D");
 
-      htree->Branch("true_x",&true_x,"true_x/D");
-      htree->Branch("true_y",&true_y,"true_y/D");
-      htree->Branch("true_z",&true_z,"true_z/D");
-      htree->Branch("true_t",&true_t,"true_t/D");
-      htree->Branch("true_px",&true_px,"true_x/D");
-      htree->Branch("true_py",&true_py,"true_x/D");
-      htree->Branch("true_pz",&true_pz,"true_x/D");
-      htree->Branch("true_energy",&true_e,"true_energy/D");
-      htree->Branch("true_length",&true_l,"true_length/D");
-      htree->Branch("pdg",&true_pdg,"pdg/I");
+      htree->Branch("true_x",&true_x,"true_x[1000]/D");
+      htree->Branch("true_y",&true_y,"true_y[1000]/D");
+      htree->Branch("true_z",&true_z,"true_z[1000]/D");
+      htree->Branch("true_t",&true_t,"true_t[1000]/D");
+      htree->Branch("true_px",&true_px,"true_x[1000]/D");
+      htree->Branch("true_py",&true_py,"true_x[1000]/D");
+      htree->Branch("true_pz",&true_pz,"true_x[1000]/D");
+      htree->Branch("true_energy",&true_e,"true_energy[1000]/D");
+      htree->Branch("true_length",&true_l,"true_length[1000]/D");
+      htree->Branch("pdg",&true_pdg,"pdg[1000]/I");
     }
 
     void fillTree(){
       htree->Fill();
-      std::cout<<"------------------------ tree filled with "<<reco_x<<" "<<event_number<<std::endl;
+      //std::cout<<"------------------------ tree filled with "<<reco_x<<" "<<event_number<<std::endl;
     }
 
 

@@ -46,7 +46,7 @@ void Cube::TEventAnalysis::Run(TFile* eventSource){
     this->setupTree("test3");
 
     std::cout<<"total number of events : "<<gCubeReconTree->GetEntries()<<std::endl;
-    for (Int_t i = 0; i< gCubeReconTree->GetEntries(); i++){
+    for (Int_t i = 0; i< gCubeReconTree->GetEntries()/100; i++){
 
 	std::cout<<"event start number -------------------------------------- "<< i <<std::endl;
     	//gCubeReconTree->GetEntry(Cube::gCubeReconEntryNumber);
@@ -121,35 +121,69 @@ void Cube::TEventAnalysis::FillEntries(
 	allResultList = ShowReconObjects(objects, allResultList, index);
 	//std::cout<<" ---------------------------------- testing cluster list result 0 "<<std::endl;
 
+	for (int loop = 0; loop<1000; loop++){
+	    reco_x[loop] = -1; 
+            reco_y[loop] = -1;
+            reco_z[loop] = -1;
+
+            reco_t[loop] = -1;
+            reco_px[loop] = -1;
+            reco_py[loop] = -1;
+            reco_pz[loop] = -1;
+            reco_e[loop] = -1;
+            reco_l[loop] = -1;
+
+            true_x[loop] = -1;
+            true_y[loop] = -1;
+            true_z[loop] = -1;
+            true_t[loop] = -1;
+            true_px[loop] = -1;
+            true_py[loop] = -1;
+            true_pz[loop] = -1;
+            true_e[loop] = -1;
+            true_l[loop] = -1;
+            true_pdg[loop] = -1;
+	}
+
+	int loopp=0;
+	double record_x = 0; double record_y =0; double record_z =0; int record_pdg = 0;
         for(int loop=0;loop<allResultList.size();loop++){
+	    if(loopp < 999 ){
+		if(loop>0 && (allResultList[loop].x == record_x && allResultList[loop].y == record_y && allResultList[loop].z == record_z && allResultList[loop].pdg == record_pdg) )
+		    continue;
+    	        reco_x[loopp] = allResultList[loop].x;
+    	        reco_y[loopp] = allResultList[loop].y;
+    	        reco_z[loopp] = allResultList[loop].z;
+	    
+    	    	reco_t[loopp] = allResultList[loop].t;
+    	    	reco_px[loopp] = allResultList[loop].px;
+    	    	reco_py[loopp] = allResultList[loop].py;
+    	    	reco_pz[loopp] = allResultList[loop].pz;
+    	    	reco_e[loopp] = allResultList[loop].e;
+    	    	reco_l[loopp] = allResultList[loop].l;
+	    
+    	    	true_x[loopp] = allResultList[loop].xt;
+    	    	true_y[loopp] = allResultList[loop].yt;
+     	    	true_z[loopp] = allResultList[loop].zt;
+    	    	true_t[loopp] = allResultList[loop].tt;
+    	    	true_px[loopp] = allResultList[loop].pxt;
+    	    	true_py[loopp] = allResultList[loop].pyt;
+    	    	true_pz[loopp] = allResultList[loop].pzt;
+    	    	true_e[loopp] = allResultList[loop].et;
+    	    	true_l[loopp] = allResultList[loop].lt;
+    	    	true_pdg[loopp] = allResultList[loop].pdg;
+		record_x = allResultList[loop].x;
+		record_y = allResultList[loop].y;
+		record_z = allResultList[loop].z;
+		record_pdg = allResultList[loop].pdg;
+		loopp++;
+	    }
+	}  
+        event_number = eventCounter;	
+	htree->Fill();
+	//this->fillTree();
 
-    	    reco_x = allResultList[loop].x;
-    	    reco_y = allResultList[loop].y;
-    	    reco_z = allResultList[loop].z;
-	    
-    	    reco_t = allResultList[loop].t;
-    	    reco_px = allResultList[loop].px;
-    	    reco_py = allResultList[loop].py;
-    	    reco_pz = allResultList[loop].pz;
-    	    reco_e = allResultList[loop].e;
-    	    reco_l = allResultList[loop].l;
-	    
-    	    true_x = allResultList[loop].xt;
-    	    true_y = allResultList[loop].yt;
-     	    true_z = allResultList[loop].zt;
-    	    true_t = allResultList[loop].tt;
-    	    true_px = allResultList[loop].pxt;
-    	    true_py = allResultList[loop].pyt;
-    	    true_pz = allResultList[loop].pzt;
-    	    true_e = allResultList[loop].et;
-    	    true_l = allResultList[loop].lt;
-    	    true_pdg = allResultList[loop].pdg;
-	    
-	    event_number = eventCounter;
-	    this->fillTree();
-	}    
-
-	entries.push_back(baseName + (*o)->GetName());
+	//entries.push_back(baseName + (*o)->GetName());
     }
 
     
