@@ -53,6 +53,13 @@ public:
       double px;
       double py;
       double pz;
+      double x_back;
+      double y_back;
+      double z_back;
+      double t_back;
+      double px_back;
+      double py_back;
+      double pz_back;      
       double e;
       double l;
       double xt;
@@ -65,6 +72,10 @@ public:
       double lt;
       double tt;
       int pdg;
+      int parentPdg;
+      int id;
+      int parentId;
+
     };
 
     static const struct infoList EmptyStruct;
@@ -109,6 +120,13 @@ private:
     double reco_px[1000];
     double reco_py[1000];
     double reco_pz[1000];
+    double reco_x_back[1000];
+    double reco_y_back[1000];
+    double reco_z_back[1000];
+    double reco_t_back[1000];
+    double reco_px_back[1000];
+    double reco_py_back[1000];
+    double reco_pz_back[1000];
     double reco_e[1000];
     double reco_l[1000];
     double true_x[1000];
@@ -121,7 +139,21 @@ private:
     double true_e[1000];
     double true_l[1000];
     int true_pdg[1000];
-    
+    int true_parentPdg[1000];
+    int traj_pdg[1000];
+    int true_id[1000];
+    int true_parentId[1000];
+    double traj_e[1000];
+    double traj_px[1000];
+    double traj_py[1000];
+    double traj_pz[1000];
+    double traj_x[1000];
+    double traj_y[1000];
+    double traj_z[1000];
+    double traj_t[1000];
+    int traj_id[1000];
+    int traj_parentId[1000];
+
     int event_number;
     TFile* hfile;
     TTree* htree;
@@ -137,6 +169,15 @@ private:
       htree->Branch("reco_px",&reco_px,"reco_px[1000]/D");
       htree->Branch("reco_py",&reco_py,"reco_py[1000]/D");
       htree->Branch("reco_pz",&reco_pz,"reco_pz[1000]/D");
+
+      htree->Branch("reco_x_back",&reco_x_back,"reco_x_back[1000]/D");
+      htree->Branch("reco_y_back",&reco_y_back,"reco_y_back[1000]/D");
+      htree->Branch("reco_z_back",&reco_z_back,"reco_z_back[1000]/D");
+      htree->Branch("reco_t_back",&reco_t_back,"reco_t_back[1000]/D");
+      htree->Branch("reco_px_back",&reco_px_back,"reco_px_back[1000]/D");
+      htree->Branch("reco_py_back",&reco_py_back,"reco_py_back[1000]/D");
+      htree->Branch("reco_pz_back",&reco_pz_back,"reco_pz_back[1000]/D");
+
       htree->Branch("reco_energy",&reco_e,"reco_energy[1000]/D");
       htree->Branch("reco_length",&reco_l,"reco_length[1000]/D");
 
@@ -149,7 +190,21 @@ private:
       htree->Branch("true_pz",&true_pz,"true_x[1000]/D");
       htree->Branch("true_energy",&true_e,"true_energy[1000]/D");
       htree->Branch("true_length",&true_l,"true_length[1000]/D");
+      htree->Branch("true_id",&true_id,"true_id[1000]/I");
+      htree->Branch("true_parentId",&true_parentId,"true_parentId[1000]/I");
       htree->Branch("pdg",&true_pdg,"pdg[1000]/I");
+      htree->Branch("parentPdg",&true_parentPdg,"parentPdg[1000]/I");
+      htree->Branch("traj_pdg",&traj_pdg,"traj_pdg[1000]/I");
+      htree->Branch("traj_e",&traj_e,"traj_e[1000]/D");
+      htree->Branch("traj_px",&traj_px,"traj_px[1000]/D");
+      htree->Branch("traj_py",&traj_py,"traj_py[1000]/D");
+      htree->Branch("traj_pz",&traj_pz,"traj_pz[1000]/D");
+      htree->Branch("traj_x",&traj_x,"traj_x[1000]/D");
+      htree->Branch("traj_y",&traj_y,"traj_y[1000]/D");
+      htree->Branch("traj_z",&traj_z,"traj_z[1000]/D");
+      htree->Branch("traj_t",&traj_t,"traj_t[1000]/D");
+      htree->Branch("traj_id",&traj_id,"traj_id[1000]/I");
+      htree->Branch("traj_parentId",&traj_parentId,"traj_parentId[1000]/I");
     }
 
     void fillTree(){

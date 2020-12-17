@@ -47,6 +47,11 @@ Cube::TReconTrackElement::TReconTrackElement(Cube::ReconTrack& track)
         TVector3 dir = frontState->GetDirection().Unit();
         TVector3 dvar = frontState->GetDirectionVariance();
 
+        TLorentzVector pos_back = backState->GetPosition();
+        TLorentzVector var_back = backState->GetPositionVariance();
+        TVector3 dir_back = backState->GetDirection().Unit();
+        TVector3 dvar_back = backState->GetDirectionVariance();
+
         double length = GetLength(track);
         double dEdX = 0.0;
         if (length > 0) {
@@ -99,6 +104,14 @@ Cube::TReconTrackElement::TReconTrackElement(Cube::ReconTrack& track)
     fInfoList.push_back(dir.Z());    
     fInfoList.push_back(dEdX);
     fInfoList.push_back(length);
+
+    fInfoList.push_back(pos_back.X());
+    fInfoList.push_back(pos_back.Y());
+    fInfoList.push_back(pos_back.Z());
+    fInfoList.push_back(pos_back.T());
+    fInfoList.push_back(dir_back.X());
+    fInfoList.push_back(dir_back.Y());
+    fInfoList.push_back(dir_back.Z());    
 }
 
 double Cube::TReconTrackElement::GetLength(Cube::ReconTrack& track) const {

@@ -46,7 +46,7 @@ void Cube::TEventAnalysis::Run(TFile* eventSource){
     this->setupTree("test3");
 
     std::cout<<"total number of events : "<<gCubeReconTree->GetEntries()<<std::endl;
-    for (Int_t i = 0; i< gCubeReconTree->GetEntries()/100; i++){
+    for (Int_t i = 0; i< gCubeReconTree->GetEntries(); i++){
 
 	std::cout<<"event start number -------------------------------------- "<< i <<std::endl;
     	//gCubeReconTree->GetEntry(Cube::gCubeReconEntryNumber);
@@ -133,6 +133,14 @@ void Cube::TEventAnalysis::FillEntries(
             reco_e[loop] = -1;
             reco_l[loop] = -1;
 
+            reco_x_back[loop] = -1;
+            reco_y_back[loop] = -1;
+            reco_z_back[loop] = -1;
+            reco_t_back[loop] = -1;
+            reco_px_back[loop] = -1;
+            reco_py_back[loop] = -1;
+            reco_pz_back[loop] = -1;
+
             true_x[loop] = -1;
             true_y[loop] = -1;
             true_z[loop] = -1;
@@ -143,6 +151,20 @@ void Cube::TEventAnalysis::FillEntries(
             true_e[loop] = -1;
             true_l[loop] = -1;
             true_pdg[loop] = -1;
+	    true_parentPdg[loop] = -1;
+	    traj_pdg[loop] = -1;
+	    traj_e[loop] = -1;
+	    traj_px[loop] = -1;
+	    traj_py[loop] = -1;
+	    traj_pz[loop] = -1;
+	    traj_x[loop] = -1;
+            traj_y[loop] = -1;
+            traj_z[loop] = -1;
+	    traj_t[loop] = -1;
+	    traj_id[loop] = -1;
+	    traj_parentId[loop] = -1;
+	    true_id[loop] = -1;
+	    true_parentId[loop] = -1;
 	}
 
 	int loopp=0;
@@ -161,7 +183,15 @@ void Cube::TEventAnalysis::FillEntries(
     	    	reco_pz[loopp] = allResultList[loop].pz;
     	    	reco_e[loopp] = allResultList[loop].e;
     	    	reco_l[loopp] = allResultList[loop].l;
-	    
+	   
+                reco_x_back[loopp] = allResultList[loop].x_back;
+                reco_y_back[loopp] = allResultList[loop].y_back;
+                reco_z_back[loopp] = allResultList[loop].z_back;
+                reco_t_back[loopp] = allResultList[loop].t_back;
+                reco_px_back[loopp] = allResultList[loop].px_back;
+                reco_py_back[loopp] = allResultList[loop].py_back;
+                reco_pz_back[loopp] = allResultList[loop].pz_back;
+
     	    	true_x[loopp] = allResultList[loop].xt;
     	    	true_y[loopp] = allResultList[loop].yt;
      	    	true_z[loopp] = allResultList[loop].zt;
@@ -172,6 +202,9 @@ void Cube::TEventAnalysis::FillEntries(
     	    	true_e[loopp] = allResultList[loop].et;
     	    	true_l[loopp] = allResultList[loop].lt;
     	    	true_pdg[loopp] = allResultList[loop].pdg;
+		true_parentPdg[loopp] = allResultList[loop].parentPdg;
+		true_id[loopp] = allResultList[loop].id;
+		true_parentId[loopp] = allResultList[loop].parentId;
 		record_x = allResultList[loop].x;
 		record_y = allResultList[loop].y;
 		record_z = allResultList[loop].z;
@@ -179,6 +212,28 @@ void Cube::TEventAnalysis::FillEntries(
 		loopp++;
 	    }
 	}  
+
+	int trajloop = 0;
+        for (Cube::Event::G4TrajectoryContainer::iterator g4Trajectory
+                 = Cube::gEvent->G4Trajectories.begin();
+             g4Trajectory != Cube::gEvent->G4Trajectories.end();
+             ++g4Trajectory) {
+	    Cube::Handle<Cube::G4Trajectory> gt = g4Trajectory->second;
+	    traj_pdg[trajloop] = gt->GetPDGCode();
+	    traj_id[trajloop] = gt->GetTrackId();
+	    traj_parentId[trajloop] = gt->GetParentId();
+            traj_e[trajloop] = gt->GetInitialMomentum().E();
+            traj_px[trajloop] = gt->GetInitialMomentum().Px();
+            traj_py[trajloop] = gt->GetInitialMomentum().Py();
+            traj_pz[trajloop] = gt->GetInitialMomentum().Pz();
+	    traj_x[trajloop] = gt->GetInitialPosition().X();
+            traj_y[trajloop] = gt->GetInitialPosition().Y();
+            traj_z[trajloop] = gt->GetInitialPosition().Z();
+	    traj_t[trajloop] = gt->GetInitialPosition().T();
+	    trajloop++;
+	}
+
+	allResultList.clear();
         event_number = eventCounter;	
 	htree->Fill();
 	//this->fillTree();
@@ -231,6 +286,7 @@ Cube::TEventAnalysis::infoList Cube::TEventAnalysis::ShowReconTrack(
     Cube::TEventAnalysis::infoList tracklist ;
     if (!obj) return tracklist;
 
+    int tempID = -999;
     for (Cube::Event::G4TrajectoryContainer::iterator g4Trajectory
              = Cube::gEvent->G4Trajectories.begin();
          g4Trajectory != Cube::gEvent->G4Trajectories.end();
@@ -250,6 +306,10 @@ Cube::TEventAnalysis::infoList Cube::TEventAnalysis::ShowReconTrack(
             tracklist.pyt = gt->GetInitialMomentum().Py();
             tracklist.pzt = gt->GetInitialMomentum().Pz();
             tracklist.pdg = gt->GetPDGCode();
+            tracklist.id = gt->GetTrackId();
+            tracklist.parentId = gt->GetParentId();	    
+
+	    tempID = gt->GetParentId();
 	   /* 
     	    outstream << "22223333"<<" "<<gt->GetPDGCode()<<" "<<gt->GetInitialMomentum().E()<<" "
                   << gt->GetInitialMomentum().Px()<<" "<< gt->GetInitialMomentum().Py() <<" "
@@ -258,7 +318,20 @@ Cube::TEventAnalysis::infoList Cube::TEventAnalysis::ShowReconTrack(
 		  << gt->GetInitialPosition().T() << std::endl;
 	   */	  
 	}
-    }    
+    }   
+
+    for (Cube::Event::G4TrajectoryContainer::iterator g4Trajectory
+             = Cube::gEvent->G4Trajectories.begin();
+         g4Trajectory != Cube::gEvent->G4Trajectories.end();
+         ++g4Trajectory) {
+        if(g4Trajectory->first == tempID){
+            Cube::Handle<Cube::G4Trajectory> gt = g4Trajectory->second;
+	    //std::cout<<"----------------- parent pdg is : "<<gt->GetPDGCode()<<std::endl;
+            tracklist.parentPdg = gt->GetPDGCode();
+	    break;
+        }
+    }
+
 
     Cube::Handle<Cube::TrackState> frontState = obj->GetState();
     if (!frontState) {
@@ -282,6 +355,14 @@ Cube::TEventAnalysis::infoList Cube::TEventAnalysis::ShowReconTrack(
     tracklist.pz = trackRecoList[6];
     tracklist.e = trackRecoList[7];
     tracklist.l = trackRecoList[8];
+
+    tracklist.x_back = trackRecoList[9];
+    tracklist.y_back = trackRecoList[10];
+    tracklist.z_back = trackRecoList[11];
+    tracklist.t_back = trackRecoList[12];
+    tracklist.px_back = trackRecoList[13];
+    tracklist.py_back = trackRecoList[14];
+    tracklist.pz_back = trackRecoList[15];
 
     return tracklist;	
 }
@@ -316,6 +397,7 @@ Cube::TEventAnalysis::infoList Cube::TEventAnalysis::ShowReconCluster(
     //std::ofstream outstream;
     //outstream.open ("testResult.txt", std::ofstream::out | std::ofstream::app);
 
+    int tempID = -999;
     for (Cube::Event::G4TrajectoryContainer::iterator g4Trajectory
              = Cube::gEvent->G4Trajectories.begin();
          g4Trajectory != Cube::gEvent->G4Trajectories.end();
@@ -334,12 +416,24 @@ Cube::TEventAnalysis::infoList Cube::TEventAnalysis::ShowReconCluster(
             clusterlist.pyt = gt->GetInitialMomentum().Py();
             clusterlist.pzt = gt->GetInitialMomentum().Pz();	  
             clusterlist.pdg = gt->GetPDGCode();  
-
+	    clusterlist.id = gt->GetTrackId();
+	    clusterlist.parentId = gt->GetParentId();
 	    //outstream << "55556666"<<" "<<gt->GetPDGCode()<<" "<<gt->GetInitialMomentum().E()<<" "
             //      << gt->GetInitialMomentum().Px()<<" "<< gt->GetInitialMomentum().Py() <<" "
             //      << gt->GetInitialMomentum().Pz()<<" "<< gt->GetInitialPosition().X() <<" "
             //      << gt->GetInitialPosition().Y() <<" " <<gt->GetInitialPosition().Z()<<" "
 	    //	    << gt->GetInitialPosition().T() << std::endl;
+        }
+    }
+    for (Cube::Event::G4TrajectoryContainer::iterator g4Trajectory
+             = Cube::gEvent->G4Trajectories.begin();
+         g4Trajectory != Cube::gEvent->G4Trajectories.end();
+         ++g4Trajectory) {
+        if(g4Trajectory->first == tempID){
+            //std::cout<<"----------------- parent pdg is : "<<gt->GetPDGCode()<<std::endl;
+            Cube::Handle<Cube::G4Trajectory> gt = g4Trajectory->second;
+            clusterlist.parentPdg = gt->GetPDGCode();
+            break;
         }
     }
 
